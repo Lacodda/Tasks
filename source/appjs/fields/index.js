@@ -3,7 +3,6 @@ import { Button, Form, FormGroup, Label, Input, FormText, FormFeedback } from 'r
 import TagsInput from 'react-tagsinput'
 import ToggleButton from 'react-toggle-button'
 import 'react-tagsinput/react-tagsinput.css'
-import 'react-bootstrap-toggle/src/bootstrap2-toggle.css'
 
 export const fieldInput = ({ input, label, type, meta: { touched, error, warning } }) => (
 	<FormGroup color={ `${ touched && error ? 'danger' : '' }` }>
