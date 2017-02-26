@@ -16,7 +16,7 @@ services:
         links:
             - php-fpm
         environment:
-            - VIRTUAL_HOST=tasks.dev
+            - VIRTUAL_HOST=tasks.dev, tasks.lacodda.com
 
 ### PHP-FPM Container #######################################
 
