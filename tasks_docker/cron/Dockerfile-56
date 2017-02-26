@@ -1,0 +1,145 @@
+#
+#--------------------------------------------------------------------------
+# Image Setup
+#--------------------------------------------------------------------------
+#
+
+FROM php:5.6-fpm
+
+MAINTAINER Lahtachev <lahtachev@gmail.com>
+
+#
+#--------------------------------------------------------------------------
+# Software's Installation
+#--------------------------------------------------------------------------
+#
+# Installing tools and PHP extentions using "apt", "docker-php", "pecl",
+#
+
+# Install "curl", "libmemcached-dev", "libpq-dev", "libjpeg-dev",
+#         "libpng12-dev", "libfreetype6-dev", "libssl-dev", "libmcrypt-dev",
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    libz-dev \
+    libpq-dev \
+    libmemcached-dev \
+    curl \
+    vim \
+    cron \
+    wget \
+    ssmtp \
+    libjpeg-dev \
+    libpng12-dev \
+    libfreetype6-dev \
+    libssl-dev \
+    libmcrypt-dev \
+    mysql-client \
+    openssh-server \
+    --no-install-recommends
+
+# Install the PHP mcrypt extention
+RUN docker-php-ext-install mcrypt
+
+# Install the PHP pdo_mysql extention
+RUN docker-php-ext-install pdo_mysql
+
+# Install the PHP pdo_pgsql extention
+RUN docker-php-ext-install pdo_pgsql
+
+#####################################
+# gd:
+#####################################
+
+# Install the PHP gd library
+RUN docker-php-ext-configure gd \
+        --enable-gd-native-ttf \
+        --with-jpeg-dir=/usr/lib \
+        --with-freetype-dir=/usr/include/freetype2 && \
+    docker-php-ext-install gd
+
+#####################################
+# xDebug:
+#####################################
+
+ARG INSTALL_XDEBUG=true
+RUN if [ ${INSTALL_XDEBUG} = true ]; then \
+    # Install the xdebug extension
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug \
+;fi
+
+# Copy xdebug configration for remote debugging
+#COPY ./xdebug.ini /usr/local/etc/php/conf.d/xdebug.ini
+
+#####################################
+# MongoDB:
+#####################################
+
+ARG INSTALL_MONGO=true
+RUN if [ ${INSTALL_MONGO} = true ]; then \
+    # Install the mongodb extension
+    pecl install mongodb && \
+    docker-php-ext-enable mongodb \
+;fi
+
+#####################################
+# ZipArchive:
+#####################################
+
+ARG INSTALL_ZIP_ARCHIVE=true
+RUN if [ ${INSTALL_ZIP_ARCHIVE} = true ]; then \
+    # Install the zip extension
+    pecl install zip && \
+    docker-php-ext-enable zip \
+;fi
+
+#####################################
+# PHP Memcached:
+#####################################
+
+ARG INSTALL_MEMCACHED=true
+RUN if [ ${INSTALL_MEMCACHED} = true ]; then \
+    # Install the php memcached extension
+    pecl install memcached && \
+    docker-php-ext-enable memcached \
+;fi
+
+#####################################
+# Opcache:
+#####################################
+ARG INSTALL_OPCACHE=true
+RUN if [ ${INSTALL_OPCACHE} = true ]; then \
+    docker-php-ext-install opcache && \
+    docker-php-ext-enable opcache \
+;fi
+
+# Copy opcache configration
+#COPY ./opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+#
+#--------------------------------------------------------------------------
+# Final Touch
+#--------------------------------------------------------------------------
+#
+
+#ADD ./site.ini /usr/local/etc/php/conf.d
+#ADD ./site.pool.conf /usr/local/etc/php-fpm.d/
+
+#Cron
+COPY crontab /etc/cron.d
+COPY start-cron /usr/sbin
+RUN chmod +x /usr/sbin/start-cron \
+    && mkfifo --mode 0666 /var/log/cron.log \
+    && sed --regexp-extended --in-place \
+    's/^session\s+required\s+pam_loginuid.so$/session optional pam_loginuid.so/' \
+    /etc/pam.d/cron
+
+RUN rm -r /var/lib/apt/lists/*
+
+RUN usermod -u 1000 www-data
+
+WORKDIR /var/www/site
+
+CMD ["start-cron"]
+
+EXPOSE 9000

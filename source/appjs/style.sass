@@ -1,0 +1,88 @@
+@import "settings"
+@import "mixins"
+
+html, body, #app
+  height: 100%
+
+html
+  body
+    #app
+      .app
+        min-height: 100%
+        position: relative
+        padding-top: 1.5rem
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        .page-wrap
+          padding-bottom: 60px
+          .app_content
+            .page-title
+              margin-bottom: 2rem
+            &_page
+              &-leave
+                -webkit-animation-name: bounceOut
+                -webkit-animation-duration: 0.5s
+                -webkit-animation-iteration-count: 1
+                -webkit-animation-timing-function: linear
+                animation-name: bounceOut
+                animation-duration: 0.5s
+                animation-iteration-count: 1
+                animation-timing-function: linear
+              &-enter
+                -webkit-animation-name: bounceIn
+                -webkit-animation-duration: .8s
+                -webkit-animation-iteration-count: 1
+                -webkit-animation-timing-function: linear
+                animation-name: bounceIn
+                animation-duration: .8s
+                animation-iteration-count: 1
+                animation-timing-function: linear
+          .documents-list
+            &-leave
+              -webkit-animation-name: bounceOut
+              -webkit-animation-duration: 0.5s
+              -webkit-animation-iteration-count: 1
+              -webkit-animation-timing-function: linear
+              animation-name: bounceOut
+              animation-duration: 0.5s
+              animation-iteration-count: 1
+              animation-timing-function: linear
+            &-enter
+              -webkit-animation-name: bounceIn
+              -webkit-animation-duration: .8s
+              -webkit-animation-iteration-count: 1
+              -webkit-animation-timing-function: linear
+              animation-name: bounceIn
+              animation-duration: .8s
+              animation-iteration-count: 1
+              animation-timing-function: linear
+          .header, .marketing, .footer
+            padding-right: 1rem
+            padding-left: 1rem
+          .header
+            padding-bottom: 1rem
+            border-bottom: .05rem solid $light-gray
+          .app_container
+            margin: 2rem 0
+          .container
+            .row
+              margin-bottom: 1rem
+          .toggle
+            display: block
+          .toggle-handle
+            background: $white
+          .react-tagsinput
+            +border-radius(.25rem)
+          .react-tagsinput--focused
+            border-color: $light_blue
+          .line-through
+            text-decoration: line-through
+        footer
+          height: 60px
+          position: absolute
+          bottom: 0
+          background-color: $light-gray
+          color: $dark-gray
+          .container
+            padding-top: 15px
