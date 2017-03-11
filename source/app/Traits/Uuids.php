@@ -1,23 +1,22 @@
 <?php
-    namespace App\Traits;
+namespace App\Traits;
 
-    use Webpatser\Uuid\Uuid;
+use Webpatser\Uuid\Uuid;
 
-    trait Uuids
+trait Uuids
+{
+
+    /**
+     * Boot function from laravel.
+     */
+    protected static function boot()
     {
+        parent::boot();
 
-        /**
-         * Boot function from laravel.
-         */
-        protected static function boot ()
-        {
-            parent::boot ();
-
-            static::creating (
-                function ($model)
-                {
-                    $model->{$model->getKeyName ()} = Uuid::generate (4)->string;
-                }
-            );
-        }
+        static::creating(
+            function ($model) {
+                $model->{$model->getKeyName()} = Uuid::generate(4)->string;
+            }
+        );
     }
+}

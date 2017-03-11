@@ -1,34 +1,34 @@
 <?php
 
-    namespace App;
+namespace App;
 
-    use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;
+
+/**
+ * Class Tag
+ *
+ * @package App
+ */
+class Tag
+    extends Model
+{
+    /**
+     * @var string
+     */
+    protected $table = 'tags';
 
     /**
-     * Class Tag
-     *
-     * @package App
+     * @var array
      */
-    class Tag
-        extends Model
+    protected $fillable = [
+        'name',
+    ];
+
+    /**
+     * @return mixed
+     */
+    public function task()
     {
-        /**
-         * @var string
-         */
-        protected $table = 'tags';
-
-        /**
-         * @var array
-         */
-        protected $fillable = [
-            'name',
-        ];
-
-        /**
-         * @return mixed
-         */
-        public function task ()
-        {
-            return $this->belongsTo ('App\Task');
-        }
+        return $this->belongsTo('App\Task');
     }
+}
